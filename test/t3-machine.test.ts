@@ -38,7 +38,11 @@ describe('T3 Machine', () => {
     expect(t3MachineService.state.value).toBe('playing');
     expect(t3MachineService.state.context).toMatchObject({
       moves: [{ x: 0, y: 0, player: 0 }],
-      board: [['X'], [], []],
+      board: [
+        ['X', undefined, undefined],
+        [undefined, undefined, undefined],
+        [undefined, undefined, undefined],
+      ],
     });
 
     t3MachineService.send('MOVE', { x: 1, y: 0 });
@@ -53,7 +57,11 @@ describe('T3 Machine', () => {
         { x: 1, y: 1, player: 1 },
         { x: 0, y: 2, player: 0 },
       ],
-      board: [['X', 'X', 'X'], ['O', 'O'], []],
+      board: [
+        ['X', 'X', 'X'],
+        ['O', 'O', undefined],
+        [undefined, undefined, undefined],
+      ],
     });
   });
 
@@ -67,7 +75,7 @@ describe('T3 Machine', () => {
     expect(t3MachineService.state.context).toMatchObject({
       message: {
         type: 'success',
-        string: 'X have won!',
+        string: 'X wins!',
       },
     });
     expect(t3MachineService.state.value).toBe('end');
@@ -84,7 +92,7 @@ describe('T3 Machine', () => {
     expect(t3MachineService.state.context).toMatchObject({
       message: {
         type: 'success',
-        string: 'X have won!',
+        string: 'X wins!',
       },
     });
   });
@@ -100,7 +108,7 @@ describe('T3 Machine', () => {
     expect(t3MachineService.state.context).toMatchObject({
       message: {
         type: 'success',
-        string: 'X have won!',
+        string: 'X wins!',
       },
     });
   });
@@ -116,7 +124,7 @@ describe('T3 Machine', () => {
     expect(t3MachineService.state.context).toMatchObject({
       message: {
         type: 'success',
-        string: 'X have won!',
+        string: 'X wins!',
       },
     });
   });
@@ -128,9 +136,13 @@ describe('T3 Machine', () => {
     expect(t3MachineService.state.value).toBe('playing');
     expect(t3MachineService.state.context).toMatchObject({
       moves: [{ x: 0, y: 0, player: 0 }],
-      board: [['X'], [], []],
+      board: [
+        ['X', undefined, undefined],
+        [undefined, undefined, undefined],
+        [undefined, undefined, undefined],
+      ],
       message: {
-        type: 'error',
+        type: 'danger',
         string: 'Position is already marked.',
       },
     });
@@ -142,9 +154,13 @@ describe('T3 Machine', () => {
     expect(t3MachineService.state.value).toBe('playing');
     expect(t3MachineService.state.context).toMatchObject({
       moves: [],
-      board: [[], [], []],
+      board: [
+        [undefined, undefined, undefined],
+        [undefined, undefined, undefined],
+        [undefined, undefined, undefined],
+      ],
       message: {
-        type: 'error',
+        type: 'danger',
         string: 'Invalid position.',
       },
     });
@@ -152,9 +168,13 @@ describe('T3 Machine', () => {
     t3MachineService.send('MOVE', { x: 0, y: -1 });
     expect(t3MachineService.state.context).toMatchObject({
       moves: [],
-      board: [[], [], []],
+      board: [
+        [undefined, undefined, undefined],
+        [undefined, undefined, undefined],
+        [undefined, undefined, undefined],
+      ],
       message: {
-        type: 'error',
+        type: 'danger',
         string: 'Invalid position.',
       },
     });

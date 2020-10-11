@@ -33,26 +33,35 @@
   },
   "name": "tic-tac-toe",
   "author": "Farhan Ghazali",
-  "module": "dist/asd.esm.js",
+  "module": "dist/tic-tack-toe.esm.js",
   "size-limit": [
     {
-      "path": "dist/asd.cjs.production.min.js",
+      "path": "dist/tic-tack-toe.cjs.production.min.js",
       "limit": "10 KB"
     },
     {
-      "path": "dist/asd.esm.js",
+      "path": "dist/tic-tack-toe.esm.js",
       "limit": "10 KB"
     }
   ],
   "devDependencies": {
     "@size-limit/preset-small-lib": "^4.6.0",
+    "@vue/component-compiler-utils": "^3.2.0",
     "husky": "^4.3.0",
+    "parcel-bundler": "^1.12.4",
+    "pug": "^3.0.0",
+    "sass": "^1.27.0",
     "size-limit": "^4.6.0",
     "tsdx": "^0.14.0",
     "tslib": "^2.0.2",
-    "typescript": "^4.0.3"
+    "typescript": "^4.0.3",
+    "vue-template-compiler": "^2.6.12"
   },
   "dependencies": {
+    "bulma": "^0.9.1",
+    "vue": "^2.6.12",
+    "vue-fragment": "^1.5.1",
+    "vue-hot-reload-api": "^2.3.4",
     "xstate": "^4.13.0",
     "xstate-router": "^0.4.3"
   }

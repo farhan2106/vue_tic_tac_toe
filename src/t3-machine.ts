@@ -9,7 +9,7 @@ export interface T3MachineContext {
   }[];
   board: any[][];
   message?: {
-    type: 'error' | 'warning' | 'info' | 'success';
+    type: 'danger' | 'warning' | 'info' | 'success';
     string: string;
   };
 }
@@ -30,6 +30,7 @@ const t3Machine = Machine<T3MachineContext>(
     },
     states: {
       origin: {
+        entry: ['resetGame'],
         exit: ['setUp'],
         on: {
           START: {
@@ -41,7 +42,7 @@ const t3Machine = Machine<T3MachineContext>(
         on: {
           MOVE: {
             target: 'playing',
-            actions: ['addPlayerMove', 'whoWon', send('END')],
+            actions: ['addPlayerMove' /*, 'whoWon'*/, send('END')],
           },
           END: {
             target: 'end',
@@ -63,9 +64,14 @@ const t3Machine = Machine<T3MachineContext>(
   },
   {
     actions: {
+      resetGame: (context: T3MachineContext, _: any) => {
+        context.board = [];
+        context.moves = [];
+        context.message = undefined;
+      },
       setUp: (context: T3MachineContext, _: any) => {
         for (let x = 0; x < context.boardSize; x++) {
-          context.board[x] = [];
+          context.board[x] = new Array(context.boardSize).fill(undefined);
         }
       },
       addPlayerMove: (context: T3MachineContext, event: any) => {
@@ -77,7 +83,7 @@ const t3Machine = Machine<T3MachineContext>(
           event.y >= context.boardSize
         ) {
           context.message = {
-            type: 'error',
+            type: 'danger',
             string: 'Invalid position.',
           };
           return;
@@ -90,7 +96,7 @@ const t3Machine = Machine<T3MachineContext>(
 
         if (context.board[event.x][event.y]) {
           context.message = {
-            type: 'error',
+            type: 'danger',
             string: 'Position is already marked.',
           };
           return;
@@ -99,32 +105,6 @@ const t3Machine = Machine<T3MachineContext>(
         context.moves = [...context.moves, { ...event, player }];
 
         context.board[event.x][event.y] = player === 0 ? Markers.X : Markers.O;
-      },
-      whoWon: (context: T3MachineContext, _any) => {
-        let xCount = 0;
-        let oCount = 0;
-        for (let x = 0; x < context.boardSize; x++) {
-          xCount =
-            xCount + context.board[x].filter(m => m === Markers.X).length;
-          oCount =
-            oCount + context.board[x].filter(m => m === Markers.O).length;
-
-          if (xCount === context.boardSize) {
-            context.message = {
-              type: 'success',
-              string: 'X have won!',
-            };
-            return;
-          }
-
-          if (oCount === context.boardSize) {
-            context.message = {
-              type: 'success',
-              string: 'O have won!',
-            };
-            return;
-          }
-        }
       },
     },
     guards: {
@@ -136,39 +116,55 @@ const t3Machine = Machine<T3MachineContext>(
             const oCount = context.board[x].filter(m => m === Markers.O).length;
 
             if (xCount === context.boardSize) {
+              context.message = {
+                type: 'success',
+                string: 'X wins!',
+              };
               return true;
             }
 
             if (oCount === context.boardSize) {
+              context.message = {
+                type: 'success',
+                string: 'O wins!',
+              };
               return true;
             }
           }
 
           // verticals
-          let xCount = 0;
-          let oCount = 0;
           for (let x = 0; x < context.boardSize; x++) {
+            let xCount = 0;
+            let oCount = 0;
             for (let y = 0; y < context.boardSize; y++) {
-              if (context.board[x][y] === Markers.X) {
+              if (context.board[y][x] === Markers.X) {
                 xCount++;
               }
-              if (context.board[x][y] === Markers.O) {
+              if (context.board[y][x] === Markers.O) {
                 oCount++;
               }
 
               if (xCount === context.boardSize) {
+                context.message = {
+                  type: 'success',
+                  string: 'X wins!',
+                };
                 return true;
               }
 
               if (oCount === context.boardSize) {
+                context.message = {
+                  type: 'success',
+                  string: 'O wins!',
+                };
                 return true;
               }
             }
           }
 
           // diagonals
-          xCount = 0;
-          oCount = 0;
+          let xCount = 0;
+          let oCount = 0;
           const boarsArrayLength = context.boardSize - 1;
           for (let y = boarsArrayLength; y >= 0; y--) {
             if (
@@ -185,10 +181,18 @@ const t3Machine = Machine<T3MachineContext>(
             }
 
             if (xCount === context.boardSize) {
+              context.message = {
+                type: 'success',
+                string: 'X wins!',
+              };
               return true;
             }
 
             if (oCount === context.boardSize) {
+              context.message = {
+                type: 'success',
+                string: 'O wins!',
+              };
               return true;
             }
           }
@@ -205,10 +209,18 @@ const t3Machine = Machine<T3MachineContext>(
             }
 
             if (xCount === context.boardSize) {
+              context.message = {
+                type: 'success',
+                string: 'X wins!',
+              };
               return true;
             }
 
             if (oCount === context.boardSize) {
+              context.message = {
+                type: 'success',
+                string: 'O wins!',
+              };
               return true;
             }
           }
