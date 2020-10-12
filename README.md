@@ -16,3 +16,23 @@ You will need to provide:
 
 Add configurable items.
 
+## Running the Tic Tac Toe
+
+By default it will run with a 3x3 board, but this can be configured by changing the `boardSize` value in [App.vue](src/vue-app/App.vue);
+
+```
+const t3MachineService = interpret(Machine.withContext({
+  boardSize: 4
+}));
+```
+
+1. `npm install`
+2. `npm run app`
+
+## Screenshots
+
+### Desktop Version
+![Desktop Version](./docs/desktop.png)
+
+### Mobile Version
+![Mobile Version](./docs/mobile.png)

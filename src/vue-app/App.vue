@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div :class="'notification is-' + message.type" v-if="message.string">
+    <div :class="'notification is-' + message.type" v-if="message && message.string">
       {{ message.string }}
     </div>
     <table class="table is-bordered is-hoverable is-striped is-fullwidth">
@@ -14,6 +14,8 @@
         </tr>
       </tbody>
     </table>
+    <p v-show="stateName === 'origin'">Push the Start button to play!</p>
+    <br />
     <div class="buttons">
       <button class="button is-info"  v-show="stateName === 'origin'" v-on:click="startGame">Start</button>
       <button class="button is-danger" v-show="stateName !== 'origin'"  v-on:click="resetGame">Reset</button>
@@ -26,7 +28,9 @@ import Vue from "vue";
 import { interpret } from 'xstate';
 import Machine from './../t3-machine';
 
-const t3MachineService = interpret(Machine);
+const t3MachineService = interpret(Machine.withContext({
+  boardSize: 3
+}));
 t3MachineService.start();
 
 export default Vue.extend({
@@ -50,14 +54,11 @@ export default Vue.extend({
   },
   mounted() {
     t3MachineService.onTransition(s => {
-      console.log(this, s.value)
       this.$data.moves = [ ...s.context.moves ];
       this.$data.board = [ ...s.context.board ];
-      // if (s.context.message) {
-        this.$data.message = {
-          ...s.context.message
-        };
-      // }
+      this.$data.message = {
+        ...s.context.message
+      };
       this.$data.boardSize = s.context.boardSize;
       this.$data.stateName = s.value;
     })
